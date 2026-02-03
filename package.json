@@ -1,5 +1,5 @@
 {
-  "name": "@elkadro/hyperliquid-proxy-no-rate-limit",
+  "name": "hyperliquid-proxy-no-rate-limit",
   "version": "1.0.0",
   "description": "Hyperliquid SDK with proxy support and configurable rate limiting",
   "author": "elkadro",
