@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import { RateLimiter } from '../utils/rateLimiter';
+import { IRateLimiter } from '../utils/rateLimiter';
 import { HttpApi } from '../utils/helpers';
 import { InfoAPI } from './info';
 import {
@@ -70,7 +70,7 @@ export class ExchangeAPI {
     testnet: boolean,
     privateKey: string,
     private info: InfoAPI,
-    rateLimiter: RateLimiter,
+    rateLimiter: IRateLimiter,
     symbolConversion: SymbolConversion,
     walletAddress: string | null = null,
     parent: Hyperliquid,

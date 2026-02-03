@@ -1,11 +1,12 @@
 # Hyperliquid API SDK
 
-Typescript SDK to more easily interact with Hyperliquid's API
+Typescript SDK to more easily interact with Hyperliquid's API with using proxy baseUrl and wsUrl and no rate limit
 
 All info on the Hyperliquid API can be found here: [HyperLiquid API Documentation](https://hyperliquid.gitbook.io/hyperliquid-docs)
 
 ## Features
 
+- Use a proxy that reroutes every request through a different ip and not needed rate limit
 - Complete API coverage for both REST and WebSocket endpoints
 - TypeScript support with comprehensive type definitions
 - Browser and Node.js compatibility

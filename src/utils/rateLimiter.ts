@@ -1,4 +1,15 @@
-export class RateLimiter {
+/**
+ * Interface for rate limiting functionality
+ */
+export interface IRateLimiter {
+  waitForToken(weight?: number): Promise<void>;
+}
+
+/**
+ * Active Rate Limiter - Implements Hyperliquid's token bucket rate limiting
+ * This enforces rate limits with 100 token capacity and 10 tokens/second refill rate
+ */
+export class RateLimiter implements IRateLimiter {
   private tokens: number;
   private lastRefill: number;
   private readonly capacity: number;
@@ -40,5 +51,16 @@ export class RateLimiter {
       this.refillTokens();
       return this.waitForToken(weight); // recursively check again after waiting
     });
+  }
+}
+
+/**
+ * No-Op Rate Limiter - Does not enforce any rate limiting
+ * Use this when rate limiting is handled by your proxy or when you want to disable it
+ */
+export class NoOpRateLimiter implements IRateLimiter {
+  async waitForToken(_weight: number = 1): Promise<void> {
+    // No-op: immediately resolve without any rate limiting
+    return Promise.resolve();
   }
 }

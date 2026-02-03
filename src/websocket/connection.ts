@@ -21,9 +21,10 @@ export class WebSocketClient {
   private manualDisconnect: boolean = false; // Flag to track if disconnect was manually initiated
   private readonly MAX_SUBSCRIPTIONS: number = 1000; // Maximum subscriptions per IP as per API docs
 
-  constructor(testnet: boolean = false, maxReconnectAttempts: number = 5) {
+  constructor(testnet: boolean = false, maxReconnectAttempts: number = 5, customWsUrl?: string) {
     this.maxReconnectAttempts = maxReconnectAttempts;
-    this.url = testnet ? CONSTANTS.WSS_URLS.TESTNET : CONSTANTS.WSS_URLS.PRODUCTION;
+    // Use custom WebSocket URL if provided, otherwise use default based on testnet flag
+    this.url = customWsUrl || (testnet ? CONSTANTS.WSS_URLS.TESTNET : CONSTANTS.WSS_URLS.PRODUCTION);
 
     // Determine which WebSocket implementation to use
     if (environment.hasNativeWebSocket()) {

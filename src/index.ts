@@ -6,7 +6,7 @@ import {
   WebSocketPayloadManager,
   createWebSocketPayloadManager,
 } from './websocket/payload-manager';
-import { RateLimiter } from './utils/rateLimiter';
+import { IRateLimiter, RateLimiter, NoOpRateLimiter } from './utils/rateLimiter';
 import * as CONSTANTS from './types/constants';
 import { CustomOperations } from './rest/custom';
 import { ethers } from 'ethers';
@@ -23,6 +23,9 @@ export interface HyperliquidConfig {
   maxReconnectAttempts?: number;
   disableAssetMapRefresh?: boolean;
   assetMapRefreshIntervalMs?: number;
+  baseUrl?: string; // Custom REST API URL (e.g., your AWS proxy)
+  wsUrl?: string; // Custom WebSocket URL (e.g., your AWS WebSocket proxy)
+  enableRateLimiting?: boolean; // Enable/disable rate limiting (default: false when using proxy)
 }
 
 export class Hyperliquid {
@@ -34,7 +37,7 @@ export class Hyperliquid {
   public custom: CustomOperations;
   public symbolConversion: SymbolConversion;
 
-  private rateLimiter: RateLimiter;
+  private rateLimiter: IRateLimiter;
   private isValidPrivateKey: boolean = false;
   private walletAddress: string | null = null;
   private _initialized: boolean = false;
@@ -56,6 +59,9 @@ export class Hyperliquid {
       maxReconnectAttempts,
       disableAssetMapRefresh = false,
       assetMapRefreshIntervalMs = 60000,
+      baseUrl,
+      wsUrl,
+      enableRateLimiting,
     } = params;
 
     // Browser-specific security warnings
@@ -71,9 +77,19 @@ export class Hyperliquid {
     }
 
     this.testnet = testnet;
-    this.baseUrl = testnet ? CONSTANTS.BASE_URLS.TESTNET : CONSTANTS.BASE_URLS.PRODUCTION;
+    // Use custom baseUrl if provided, otherwise use default based on testnet flag
+    this.baseUrl = baseUrl || (testnet ? CONSTANTS.BASE_URLS.TESTNET : CONSTANTS.BASE_URLS.PRODUCTION);
     this.enableWs = enableWs;
-    this.rateLimiter = new RateLimiter();
+    
+    // Determine if rate limiting should be enabled
+    // Default: disabled when using custom proxy (baseUrl or wsUrl provided), enabled otherwise
+    const shouldEnableRateLimiting = enableRateLimiting ?? !(baseUrl || wsUrl);
+    this.rateLimiter = shouldEnableRateLimiting ? new RateLimiter() : new NoOpRateLimiter();
+    
+    if (!shouldEnableRateLimiting) {
+      console.log('Rate limiting disabled (using custom proxy or explicitly disabled)');
+    }
+    
     this.symbolConversion = new SymbolConversion(
       this.baseUrl,
       this.rateLimiter,
@@ -97,8 +113,8 @@ export class Hyperliquid {
         );
       }
 
-      // Create WebSocket client - it will attempt to use ws package if native WebSocket is not available
-      this.ws = new WebSocketClient(testnet, maxReconnectAttempts);
+      // Create WebSocket client with custom URL if provided
+      this.ws = new WebSocketClient(testnet, maxReconnectAttempts, wsUrl);
       this.subscriptions = new WebSocketSubscriptions(this.ws, this.symbolConversion);
 
       // Only disable WebSocket if the client fails to initialize
@@ -295,7 +311,7 @@ export class Hyperliquid {
     return this.baseUrl;
   }
 
-  public getRateLimiter(): RateLimiter {
+  public getRateLimiter(): IRateLimiter {
     return this.rateLimiter;
   }
 
@@ -328,3 +344,4 @@ export class Hyperliquid {
 export * from './types';
 export * from './utils/signing';
 export * from './types/constants';
+export { IRateLimiter, RateLimiter, NoOpRateLimiter } from './utils/rateLimiter';

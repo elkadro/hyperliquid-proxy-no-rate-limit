@@ -1,4 +1,4 @@
-import { RateLimiter } from '../utils/rateLimiter';
+import { IRateLimiter } from '../utils/rateLimiter';
 import { GeneralInfoAPI } from './info/general';
 import { SpotInfoAPI } from './info/spot';
 import { PerpetualsInfoAPI } from './info/perpetuals';
@@ -52,7 +52,7 @@ export class InfoAPI {
 
   constructor(
     baseURL: string,
-    rateLimiter: RateLimiter,
+    rateLimiter: IRateLimiter,
     symbolConversion: SymbolConversion,
     parent: Hyperliquid
   ) {

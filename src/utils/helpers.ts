@@ -1,13 +1,13 @@
 import axios, { AxiosInstance } from 'axios';
 import { handleApiError } from './errors';
-import { RateLimiter } from './rateLimiter';
+import { IRateLimiter } from './rateLimiter';
 
 export class HttpApi {
   private client: AxiosInstance;
   private endpoint: string;
-  private rateLimiter: RateLimiter;
+  private rateLimiter: IRateLimiter;
 
-  constructor(baseUrl: string, endpoint: string = '/', rateLimiter: RateLimiter) {
+  constructor(baseUrl: string, endpoint: string = '/', rateLimiter: IRateLimiter) {
     this.endpoint = endpoint;
     this.client = axios.create({
       baseURL: baseUrl,
