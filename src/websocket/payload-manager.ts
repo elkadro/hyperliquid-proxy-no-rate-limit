@@ -239,8 +239,8 @@ export class WebSocketPayloadManager {
   }
 
   /**
- * Delegate/Undelegate for staking via WebSocket POST
- */
+   * Delegate/Undelegate for staking via WebSocket POST
+   */
   async tokenDelegate(wei: bigint, validator: string, isUndelegate: boolean): Promise<any> {
     return this.executeMethod('tokenDelegate', { wei, validator, isUndelegate });
   }

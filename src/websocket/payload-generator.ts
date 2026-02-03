@@ -337,7 +337,7 @@ export const EXCHANGE_METHOD_CONFIGS: Record<string, PayloadMethodConfig> = {
  * Dynamic payload generator class
  */
 export class PayloadGenerator {
-  constructor(private context: PayloadGenerationContext) { }
+  constructor(private context: PayloadGenerationContext) {}
 
   /**
    * Generate a signed payload for any exchange method

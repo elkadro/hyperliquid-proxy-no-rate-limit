@@ -24,7 +24,8 @@ export class WebSocketClient {
   constructor(testnet: boolean = false, maxReconnectAttempts: number = 5, customWsUrl?: string) {
     this.maxReconnectAttempts = maxReconnectAttempts;
     // Use custom WebSocket URL if provided, otherwise use default based on testnet flag
-    this.url = customWsUrl || (testnet ? CONSTANTS.WSS_URLS.TESTNET : CONSTANTS.WSS_URLS.PRODUCTION);
+    this.url =
+      customWsUrl || (testnet ? CONSTANTS.WSS_URLS.TESTNET : CONSTANTS.WSS_URLS.PRODUCTION);
 
     // Determine which WebSocket implementation to use
     if (environment.hasNativeWebSocket()) {

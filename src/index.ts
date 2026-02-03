@@ -78,18 +78,19 @@ export class Hyperliquid {
 
     this.testnet = testnet;
     // Use custom baseUrl if provided, otherwise use default based on testnet flag
-    this.baseUrl = baseUrl || (testnet ? CONSTANTS.BASE_URLS.TESTNET : CONSTANTS.BASE_URLS.PRODUCTION);
+    this.baseUrl =
+      baseUrl || (testnet ? CONSTANTS.BASE_URLS.TESTNET : CONSTANTS.BASE_URLS.PRODUCTION);
     this.enableWs = enableWs;
-    
+
     // Determine if rate limiting should be enabled
     // Default: disabled when using custom proxy (baseUrl or wsUrl provided), enabled otherwise
     const shouldEnableRateLimiting = enableRateLimiting ?? !(baseUrl || wsUrl);
     this.rateLimiter = shouldEnableRateLimiting ? new RateLimiter() : new NoOpRateLimiter();
-    
+
     if (!shouldEnableRateLimiting) {
       console.log('Rate limiting disabled (using custom proxy or explicitly disabled)');
     }
-    
+
     this.symbolConversion = new SymbolConversion(
       this.baseUrl,
       this.rateLimiter,
